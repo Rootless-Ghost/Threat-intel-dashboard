@@ -12,6 +12,12 @@ A Python-based threat intelligence tool that aggregates IOCs from multiple sourc
 - **CLI Mode**: Command-line interface for quick lookups and scripting
 - **Export Results**: Save findings to JSON for reporting
 
+
+![Web Dashboard](screenshots/Threat-intel-dashboard.png)
+![CLI Demo](screenshots/threat-intel-dashboard-cli.png)
+
+  
+
 ## Installation
 
 ```bash
