@@ -13,7 +13,12 @@ A Python-based threat intelligence tool that aggregates IOCs from multiple sourc
 - **Export Results**: Save findings to JSON for reporting
 
 
+## Demo
+
+### Web Interface
 ![Web Dashboard](screenshots/Threat-intel-dashboard.png)
+
+### CLI Mode
 ![CLI Demo](screenshots/threat-intel-dashboard-cli.png)
 
   
