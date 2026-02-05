@@ -4,8 +4,8 @@ A Python-based threat intelligence tool that aggregates IOCs from multiple sourc
 
 ## Demo
 
-![Threat Intel Dashboard Demo](threat-intel-dashboard-cli.png)
-![Threat Intel Dashboard Demo](threat-intel-dashboard-cli.png)
+![Threat Intel Dashboard CLI Demo](threat-intel-dashboard-cli.png)
+![Threat Intel Dashboard WEB Demo](Threat-intel-dashboard.png)
 
 ## Features
 
