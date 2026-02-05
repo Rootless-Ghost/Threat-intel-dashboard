@@ -2,13 +2,6 @@
 
 A Python-based threat intelligence tool that aggregates IOCs from multiple sources, performs reputation lookups, and displays actionable intelligence for SOC analysts.
 
-## Demo
-
-![Threat Intel Dashboard CLI Demo](threat-intel-dashboard-cli.png)
-
-
-
-![Threat Intel Dashboard WEB Demo](Threat-intel-dashboard.png)
 
 ## Features
 
