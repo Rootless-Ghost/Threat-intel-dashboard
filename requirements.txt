@@ -1,0 +1,16 @@
+# Threat Intel Dashboard Dependencies
+
+# Web framework
+flask>=3.0.0
+
+# HTTP requests for API calls
+requests>=2.31.0
+
+# Configuration
+pyyaml>=6.0
+
+# Optional: Rate limiting
+# flask-limiter>=3.5.0
+
+# Optional: Caching
+# flask-caching>=2.1.0

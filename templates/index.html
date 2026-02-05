@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threat Intel Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        
+        h1 {
+            color: #00d4ff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+        }
+        
+        .search-section {
+            background: #12121a;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #1a1a2e;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1rem;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4e;
+            border-radius: 8px;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: #00d4ff;
+        }
+        
+        .search-input::placeholder {
+            color: #555;
+        }
+        
+        .search-btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #00a8cc;
+        }
+        
+        .search-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+        
+        .type-selector {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .type-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .type-option input {
+            accent-color: #00d4ff;
+        }
+        
+        .results-section {
+            display: none;
+            background: #12121a;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #1a1a2e;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #1a1a2e;
+        }
+        
+        .ioc-info h2 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .ioc-info .type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #1a1a2e;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        .risk-score {
+            text-align: center;
+        }
+        
+        .score-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .score-label {
+            font-size: 0.9rem;
+            padding: 5px 15px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        
+        .risk-clean { color: #00ff88; }
+        .risk-low { color: #88ff00; }
+        .risk-medium { color: #ffaa00; }
+        .risk-high { color: #ff6600; }
+        .risk-critical { color: #ff0044; }
+        
+        .label-clean { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .label-low { background: rgba(136, 255, 0, 0.2); color: #88ff00; }
+        .label-medium { background: rgba(255, 170, 0, 0.2); color: #ffaa00; }
+        .label-high { background: rgba(255, 102, 0, 0.2); color: #ff6600; }
+        .label-critical { background: rgba(255, 0, 68, 0.2); color: #ff0044; }
+        
+        .sources-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .source-card {
+            background: #1a1a2e;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .source-name {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .source-status {
+            font-size: 0.8rem;
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+        
+        .status-available { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .status-unavailable { background: rgba(255, 0, 68, 0.2); color: #ff0044; }
+        
+        .source-details {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #252540;
+        }
+        
+        .detail-label {
+            color: #888;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        .detail-value.bad { color: #ff0044; }
+        .detail-value.warn { color: #ffaa00; }
+        .detail-value.good { color: #00ff88; }
+        
+        .demo-notice {
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid #ffaa00;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffaa00;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #1a1a2e;
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(255, 0, 68, 0.1);
+            border: 1px solid #ff0044;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            color: #ff0044;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Threat Intel Dashboard</h1>
+            <p class="subtitle">IOC Reputation Lookup Tool</p>
+        </header>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" 
+                       class="search-input" 
+                       id="iocInput" 
+                       placeholder="Enter IP, domain, hash, or URL..."
+                       autocomplete="off">
+                <button class="search-btn" id="searchBtn" onclick="performLookup()">
+                    Analyze
+                </button>
+            </div>
+            <div class="type-selector">
+                <label class="type-option">
+                    <input type="radio" name="iocType" value="auto" checked>
+                    Auto-detect
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="iocType" value="ip">
+                    IP Address
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="iocType" value="domain">
+                    Domain
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="iocType" value="hash">
+                    Hash
+                </label>
+                <label class="type-option">
+                    <input type="radio" name="iocType" value="url">
+                    URL
+                </label>
+            </div>
+        </section>
+        
+        <section class="results-section" id="resultsSection">
+            <div id="resultsContent">
+                <!-- Results will be injected here -->
+            </div>
+        </section>
+        
+        <footer>
+            <p>Built by <a href="https://github.com/Rootless-Ghost" target="_blank">RootlessGhost</a> | Threat Intel Dashboard v1.0</p>
+        </footer>
+    </div>
+    
+    <script>
+        const iocInput = document.getElementById('iocInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContent = document.getElementById('resultsContent');
+        
+        // Enter key handler
+        iocInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performLookup();
+            }
+        });
+        
+        async function performLookup() {
+            const ioc = iocInput.value.trim();
+            if (!ioc) return;
+            
+            const typeRadio = document.querySelector('input[name="iocType"]:checked');
+            const iocType = typeRadio.value === 'auto' ? null : typeRadio.value;
+            
+            // Show loading
+            resultsSection.classList.add('active');
+            resultsContent.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing IOC...</p>
+                </div>
+            `;
+            
+            searchBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/lookup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ioc, type: iocType })
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    showError(result.error);
+                } else {
+                    showResults(result);
+                }
+            } catch (error) {
+                showError('Failed to connect to server');
+            }
+            
+            searchBtn.disabled = false;
+        }
+        
+        function showError(message) {
+            resultsContent.innerHTML = `
+                <div class="error-message">
+                    <p>❌ ${message}</p>
+                </div>
+            `;
+        }
+        
+        function getRiskClass(level) {
+            const classes = {
+                'CLEAN': 'clean',
+                'LOW': 'low',
+                'MEDIUM': 'medium',
+                'HIGH': 'high',
+                'CRITICAL': 'critical'
+            };
+            return classes[level] || 'medium';
+        }
+        
+        function showResults(result) {
+            const riskClass = getRiskClass(result.risk_level);
+            
+            let html = '';
+            
+            // Demo mode notice
+            if (result.demo_mode) {
+                html += `
+                    <div class="demo-notice">
+                        ⚠️ DEMO MODE - Configure API keys in config.yaml for real threat intelligence data
+                    </div>
+                `;
+            }
+            
+            // Result header
+            html += `
+                <div class="result-header">
+                    <div class="ioc-info">
+                        <h2>${escapeHtml(result.ioc)}</h2>
+                        <span class="type-badge">${result.type.toUpperCase()}</span>
+                    </div>
+                    <div class="risk-score">
+                        <div class="score-value risk-${riskClass}">${result.risk_score}</div>
+                        <div class="score-label label-${riskClass}">${result.risk_level}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Source cards
+            html += '<div class="sources-grid">';
+            
+            // VirusTotal
+            const vt = result.sources.virustotal;
+            if (vt) {
+                const vtStatus = vt.available ? 'available' : 'unavailable';
+                html += `
+                    <div class="source-card">
+                        <div class="source-header">
+                            <span class="source-name">VirusTotal</span>
+                            <span class="source-status status-${vtStatus}">
+                                ${vt.available ? '✓ Available' : '✗ Unavailable'}
+                            </span>
+                        </div>
+                        ${vt.available ? `
+                            <div class="source-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Malicious</span>
+                                    <span class="detail-value ${vt.malicious > 0 ? 'bad' : 'good'}">${vt.malicious}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Suspicious</span>
+                                    <span class="detail-value ${vt.suspicious > 0 ? 'warn' : 'good'}">${vt.suspicious}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Clean</span>
+                                    <span class="detail-value good">${vt.clean}</span>
+                                </div>
+                            </div>
+                        ` : '<p style="color: #666;">No data available</p>'}
+                    </div>
+                `;
+            }
+            
+            // AbuseIPDB
+            const abuse = result.sources.abuseipdb;
+            if (abuse) {
+                const abuseStatus = abuse.available ? 'available' : 'unavailable';
+                const abuseClass = abuse.abuse_score > 50 ? 'bad' : abuse.abuse_score > 0 ? 'warn' : 'good';
+                html += `
+                    <div class="source-card">
+                        <div class="source-header">
+                            <span class="source-name">AbuseIPDB</span>
+                            <span class="source-status status-${abuseStatus}">
+                                ${abuse.available ? '✓ Available' : '✗ Unavailable'}
+                            </span>
+                        </div>
+                        ${abuse.available ? `
+                            <div class="source-details">
+                                <div class="detail-row">
+                                    <span class="detail-label">Abuse Confidence</span>
+                                    <span class="detail-value ${abuseClass}">${abuse.abuse_score}%</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Total Reports</span>
+                                    <span class="detail-value">${abuse.total_reports}</span>
+                                </div>
+                                ${abuse.details ? `
+                                    <div class="detail-row">
+                                        <span class="detail-label">Country</span>
+                                        <span class="detail-value">${abuse.details.country || 'Unknown'}</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">ISP</span>
+                                        <span class="detail-value">${abuse.details.isp || 'Unknown'}</span>
+                                    </div>
+                                    ${abuse.details.is_tor ? `
+                                        <div class="detail-row">
+                                            <span class="detail-label">TOR Node</span>
+                                            <span class="detail-value bad">Yes</span>
+                                        </div>
+                                    ` : ''}
+                                ` : ''}
+                            </div>
+                        ` : '<p style="color: #666;">No data available</p>'}
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            
+            resultsContent.innerHTML = html;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
