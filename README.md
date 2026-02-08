@@ -5,7 +5,6 @@ A Python-based threat intelligence tool that aggregates IOCs from multiple sourc
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
-![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
 ## Features
 
