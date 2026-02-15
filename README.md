@@ -1,10 +1,14 @@
-# Threat Intel Dashboard
+<div align="center">
+  
+# 🎯 Threat Intel Dashboard
 
 A Python-based threat intelligence tool that aggregates IOCs from multiple sources, performs reputation lookups, and displays actionable intelligence for SOC analysts.
 
 ![Python](https://img.shields.io/badge/Python-3.9+-blue?logo=python)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+
+</div>
 
 ## Features
 
