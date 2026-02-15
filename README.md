@@ -133,4 +133,4 @@ MIT License - See [LICENSE](LICENSE) for details
 
 **RootlessGhost**
 
-Junior Penetration Tester | SOC Analyst in Training
+Purple Team & SOC Focus
