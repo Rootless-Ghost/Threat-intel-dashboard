@@ -123,12 +123,14 @@ The dashboard calculates a composite risk score (0-100):
 - [ ] Historical lookup caching
 - [ ] MITRE ATT&CK mapping
 
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details
+
+ 
 ## Author
 
 **RootlessGhost**
 
 Junior Penetration Tester | SOC Analyst in Training
-
-## License
-
-MIT License - See [LICENSE](LICENSE) for details
