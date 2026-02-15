@@ -129,8 +129,8 @@ The dashboard calculates a composite risk score (0-100):
 MIT License - See [LICENSE](LICENSE) for details
 
  
-## Author
+<div align="center">
 
-**RootlessGhost**
+Built by [Rootless-Ghost](https://github.com/Rootless-Ghost) 
 
-Purple Team & SOC Focus
+</div>
